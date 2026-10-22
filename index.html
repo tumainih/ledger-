@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duka Ledger | Mathayo 6:33</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1220">
+<!-- No external fonts/CDNs are loaded — everything below runs fully offline
+     once this page and its assets (styles.css, app.js) are on the device. -->
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ================= HERO ================= -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">🧾 Duka Ledger &nbsp;•&nbsp; Smart Shop Record</div>
+      <h1>Duka Ledger</h1>
+      <p class="verse">
+        <strong>Mathayo 6:33</strong> —
+        “Bali utafuteni kwanza ufalme wa Mungu, na haki yake;
+        na hayo yote mtazidishiwa.”
+      </p>
+    </div>
+  </header>
+
+  <!-- ================= METRICS ================= -->
+  <section class="metrics-grid">
+    <div class="metric-card">
+      <div class="accent-bar" id="accent-gs"></div>
+      <div class="metric-icon" id="icon-gs-bg">🔴</div>
+      <div class="metric-label">Jumla Kuu / Deni</div>
+      <div class="metric-value" id="metric-gs">TSh 0</div>
+    </div>
+    <div class="metric-card">
+      <div class="accent-bar accent-indigo"></div>
+      <div class="metric-icon icon-indigo">📦</div>
+      <div class="metric-label">Bidhaa Kwenye Mfumo</div>
+      <div class="metric-value neutral" id="metric-items">0</div>
+    </div>
+    <div class="metric-card">
+      <div class="accent-bar accent-amber"></div>
+      <div class="metric-icon icon-amber">🧾</div>
+      <div class="metric-label">Rekodi Zote</div>
+      <div class="metric-value neutral" id="metric-entries">0</div>
+    </div>
+  </section>
+
+  <!-- ================= TABS ================= -->
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="ujumbe" role="tab">📝 Andika Ujumbe</button>
+    <button class="tab-btn" data-tab="rectification" role="tab">🛠️ Rectification</button>
+    <button class="tab-btn" data-tab="tafuta" role="tab">🔍 Tafuta</button>
+  </nav>
+
+  <!-- ================= TAB 1: ANDIKA UJUMBE ================= -->
+  <section id="tab-ujumbe" class="tab-panel active">
+
+    <div class="section-card">
+      <div class="section-title">🛒 Tengeneza Order</div>
+      <div class="section-subtitle">
+        Chagua bidhaa moja au nyingi kwa wakati mmoja, weka idadi,
+        kisha zote zitaongezwa kwenye order kwa mbofyo mmoja.
+      </div>
+
+      <div class="picker-grid">
+        <div class="picker-items">
+          <label class="field-label">Bidhaa (chagua moja au nyingi)</label>
+          <input type="text" id="item-search" class="text-input" placeholder="🔎 Tafuta bidhaa...">
+          <div id="item-checklist" class="item-checklist"></div>
+        </div>
+        <div class="picker-qty">
+          <label class="field-label">Idadi (kwa kila bidhaa)</label>
+          <input type="number" id="pick-qty" class="num-input" min="1" step="1" value="1">
+        </div>
+        <div class="picker-add">
+          <label class="field-label">&nbsp;</label>
+          <button id="btn-add-all" class="btn btn-primary btn-block">➕ Ongeza Zote</button>
+        </div>
+      </div>
+      <div id="pick-warning" class="warning-note" style="display:none;">Chagua bidhaa kwanza.</div>
+    </div>
+
+    <div class="section-card" id="cart-section" style="display:none;">
+      <div class="section-title">📦 Order ya Sasa</div>
+      <div class="section-subtitle">Unaweza kubadilisha idadi au bei kabla ya kuhifadhi.</div>
+      <div id="cart-rows" class="cart-rows"></div>
+      <hr>
+      <div class="totals-grid">
+        <div class="metric-card">
+          <div class="accent-bar accent-indigo"></div>
+          <div class="metric-icon icon-indigo">🧮</div>
+          <div class="metric-label">Jumla ya Order</div>
+          <div class="metric-value neutral" id="metric-subtotal">TSh 0</div>
+        </div>
+        <div class="metric-card">
+          <div class="accent-bar" id="accent-newgs"></div>
+          <div class="metric-icon" id="icon-newgs-bg">📈</div>
+          <div class="metric-label">Jumla Kuu Mpya</div>
+          <div class="metric-value" id="metric-newgs">TSh 0</div>
+        </div>
+      </div>
+      <button id="btn-save-order" class="btn btn-primary btn-block btn-lg">✅ Hifadhi Order na Tengeneza Kadi</button>
+    </div>
+
+    <div class="section-card" id="empty-cart-note">
+      <div class="info-note">Bado hujaongeza bidhaa kwenye order.</div>
+    </div>
+
+    <div class="section-card" id="order-card-section" style="display:none;">
+      <div class="section-title">📋 Kadi ya Kupaste</div>
+      <div class="section-subtitle">Nakili ujumbe huu na utume kwa shopkeeper.</div>
+      <pre id="order-card-text" class="card-output"></pre>
+      <button class="btn btn-copy" data-copy-target="order-card-text">📎 Nakili Kadi</button>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">💵 Rekodi Malipo</div>
+      <div class="section-subtitle">Weka kiasi kilicholipwa ili kipunguzwe kwenye Jumla Kuu.</div>
+      <label class="field-label">Kiasi cha Malipo (Tsh)</label>
+      <input type="number" id="pay-amount" class="num-input full" min="0" step="100" value="0">
+      <div id="pay-warning" class="warning-note" style="display:none;">Weka kiasi cha malipo zaidi ya sifuri.</div>
+      <button id="btn-save-payment" class="btn btn-secondary btn-block btn-lg">💳 Hifadhi Malipo na Tengeneza Kadi</button>
+      <pre id="payment-card-text" class="card-output" style="display:none;"></pre>
+      <button id="btn-copy-payment" class="btn btn-copy" style="display:none;" data-copy-target="payment-card-text">📎 Nakili Kadi</button>
+    </div>
+
+  </section>
+
+  <!-- ================= TAB 2: RECTIFICATION ================= -->
+  <section id="tab-rectification" class="tab-panel">
+
+    <div class="section-card">
+      <div class="section-title">🛠️ Rectification — Bidhaa na Bei</div>
+      <div class="section-subtitle">
+        Chagua bidhaa iliyopo kurekebisha jina au gharama,
+        au ongeza bidhaa mpya pamoja na bei yake.
+      </div>
+
+      <div class="subhead">✏️ Rekebisha Bidhaa Iliyopo</div>
+      <label class="field-label">Chagua bidhaa ya kurekebisha</label>
+      <select id="rectify-select" class="select-input full"></select>
+
+      <div class="form-grid">
+        <div>
+          <label class="field-label">Jina jipya la bidhaa</label>
+          <input type="text" id="rectify-name" class="text-input full">
+        </div>
+        <div>
+          <label class="field-label">Bei mpya (Tsh)</label>
+          <input type="number" id="rectify-price" class="num-input full" min="0" step="100">
+        </div>
+      </div>
+      <div id="rectify-error" class="warning-note" style="display:none;"></div>
+      <div id="rectify-success" class="success-note" style="display:none;"></div>
+      <button id="btn-update-item" class="btn btn-primary btn-block btn-lg">💾 Update / Hifadhi Mabadiliko</button>
+
+      <hr>
+
+      <div class="subhead">➕ Ongeza Bidhaa Mpya</div>
+      <div class="form-grid">
+        <div>
+          <label class="field-label">Jina la bidhaa mpya</label>
+          <input type="text" id="new-item-name" class="text-input full" placeholder="Mfano: Mchele">
+        </div>
+        <div>
+          <label class="field-label">Bei ya bidhaa (Tsh)</label>
+          <input type="number" id="new-item-price" class="num-input full" min="0" step="100" value="0">
+        </div>
+      </div>
+      <div id="new-item-error" class="warning-note" style="display:none;"></div>
+      <div id="new-item-success" class="success-note" style="display:none;"></div>
+      <button id="btn-add-item" class="btn btn-primary btn-block btn-lg">➕ Ongeza Bidhaa</button>
+
+      <hr>
+
+      <div class="subhead">📦 Bidhaa Zote</div>
+      <div class="table-wrap">
+        <table class="data-table" id="items-table">
+          <thead><tr><th>Bidhaa</th><th>Bei</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <div class="subhead">🗑️ Ondoa Bidhaa</div>
+      <label class="field-label">Chagua bidhaa ya kuondoa</label>
+      <select id="delete-select" class="select-input full"></select>
+      <button id="btn-delete-item" class="btn btn-block btn-lg">🗑️ Futa Bidhaa Hii</button>
+      <div id="delete-success" class="success-note" style="display:none;"></div>
+      <div id="delete-warning" class="warning-note" style="display:none;">Chagua bidhaa kwanza.</div>
+    </div>
+
+  </section>
+
+  <!-- ================= TAB 3: TAFUTA ================= -->
+  <section id="tab-tafuta" class="tab-panel">
+
+    <div class="section-card">
+      <div class="section-title">🔍 Tafuta Rekodi</div>
+      <div class="section-subtitle">Chuja kwa tarehe, jina la bidhaa au gharama.</div>
+
+      <div class="form-grid">
+        <div>
+          <label class="field-label">Kuanzia tarehe</label>
+          <input type="date" id="q-from" class="text-input full">
+        </div>
+        <div>
+          <label class="field-label">Mpaka tarehe</label>
+          <input type="date" id="q-to" class="text-input full">
+        </div>
+      </div>
+
+      <label class="field-label">Jina la bidhaa</label>
+      <input type="text" id="q-item" class="text-input full" placeholder="Mfano: Mkate">
+
+      <div class="form-grid">
+        <div>
+          <label class="field-label">Gharama</label>
+          <select id="q-op" class="select-input full">
+            <option value="any">Yeyote</option>
+            <option value="lt">Chini ya (&lt;)</option>
+            <option value="gt">Zaidi ya (&gt;)</option>
+            <option value="eq">Sawa na (=)</option>
+            <option value="lte">≤</option>
+            <option value="gte">≥</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Kiasi (Tsh)</label>
+          <input type="number" id="q-val" class="num-input full" min="0" step="100" value="0">
+        </div>
+      </div>
+
+      <hr>
+
+      <div id="search-results"></div>
+
+      <div id="search-card-section" style="display:none;">
+        <div class="subhead">📋 Kadi ya Matokeo</div>
+        <pre id="query-card-text" class="card-output"></pre>
+        <button class="btn btn-copy" data-copy-target="query-card-text">📎 Nakili Kadi</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    🧾 <strong>Duka Ledger</strong> · Smart Shop Record
+    <br>
+    <span class="verse-mini">Mathayo 6:33 — Jumla Kuu inahesabiwa kiotomatiki kutoka kwenye rekodi.</span>
+    <br>
+    <span class="verse-mini">Taarifa zinahifadhiwa kwenye kivinjari chako (localStorage).</span>
+  </footer>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

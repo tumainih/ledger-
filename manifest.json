@@ -1,0 +1,13 @@
+{
+  "name": "Duka Ledger",
+  "short_name": "Duka Ledger",
+  "description": "Duka Ledger — Mathayo 6:33. Shop / debt ledger that works fully offline.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f8fc",
+  "theme_color": "#0b1220",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
